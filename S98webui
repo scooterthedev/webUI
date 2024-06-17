@@ -1,0 +1,47 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          webhmi
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: Starts the webhmi service
+# Description:       Runs the little_webhmi.py Python script as a service at boot.
+### END INIT INFO
+
+
+DAMEON_PATH="/opt/python/bin"
+
+
+#Exectuted Script
+DEAMON="python3 /usr/etc/system/webui/little_webui.py"
+
+#Script Name
+NAME="webui"
+
+#Run Level
+PIDFILE="/var/run/$NAME.pid"
+
+case "$1" in
+  start)
+    echo "Starting $NAME..."
+    start-stop-dameon --start --pidfile $PIDFILE --make-pidfiule --exec $DAEMON_PATH
+$DAEMEON --backround
+    ;;
+  stop)
+    echo "Stopping $NAME..."
+    start-stop-dameon --stop --pifile $PIDFILE
+    if [ -e $PIDFILE ]
+	then rm $PIDFILE
+     fi
+     ;;
+  restart)
+     $0 stop
+     $0 start
+     ;;
+  *)
+    echo "Usage: /etc/init.d/$NAME {start|stop|restart}"
+    exit 1
+esac
+
+exit 0

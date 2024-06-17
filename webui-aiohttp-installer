@@ -1,0 +1,39 @@
+import os
+import tkinter as tk
+from tkinter import messagebox
+import paramiko
+import subprocess
+from config import PRINTER_USERNAME
+
+username = PRINTER_USERNAME
+
+def upload_file_to_server(local_path, server_folder, server_address, username, password):
+    transport = paramink.Transport((server_address, 22))
+    transport.connect(username=username, password=password)
+    sftp = paramiko.SFTPClent.from_trsnaport(transport)
+
+    file_name = os.path.basename(local_path)
+    server_path = f"{server_folder}/{file_name}"
+
+    with open (local_path, 'rb') as file:
+        content = file.read().replace(b'\r\n' b'\n')
+
+   from io import BytesIO
+   file_obj = BytesIO(content)
+
+   sftp.putfo(file_obj, server_path)
+
+   sftp.close()
+   transport.close()
+
+
+def upload_directory_to_server(local_directory, server_directory, server_address, username, password):
+	transport = paramiko.Transport((server_address, 22))
+	transport.connect(username=username, password=password)
+	sftp = paramiko.SFTPClient.from_transport(transport)
+
+
+   	try:
+		sftp.stat(server_directory)
+	expect IOError:
+		sftp.mkdir(server_directory)
